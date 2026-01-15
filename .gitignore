@@ -1,6 +1,9 @@
 # Wirtualne środowisko
 venv/
 
+# Pliki .html pobierane w celu przemielenia
+files/
+
 # Pliki Pythona do cache
 __pycache__/
 *.pyc
