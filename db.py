@@ -13,6 +13,7 @@ def init_db():
             id TEXT PRIMARY KEY,
             title TEXT,
             price INTEGER,
+			type TEXT,
             url TEXT,
             last_seen TEXT
         )
@@ -31,8 +32,8 @@ def upsert_offer(offer):
         if row is None:
             # Oferta nie istnieje – wstaw nową
             con.execute(
-                "INSERT INTO offers VALUES (?, ?, ?, ?, ?)",
-                (offer["id"], offer["title"], offer["price"], offer["url"], now)
+                "INSERT INTO offers VALUES (?, ?, ?, ?, ?, ?)",
+                (offer["id"], offer["title"], offer["price"], offer["type"], offer["url"], now)
             )
         else:
             old_price = row[0]

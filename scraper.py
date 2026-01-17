@@ -1,6 +1,10 @@
 from bs4 import BeautifulSoup
+import os
 import re
 import glob
+
+TYPE_RE = re.compile(r"olx_page_([a-zA-Z0-9]+)")
+
 
 def parse_price(text):
     """
@@ -10,6 +14,7 @@ def parse_price(text):
     nums = re.findall(r"\d+", text)
     return int("".join(nums)) if nums else None
 
+
 def fetch_offers(max_price=None):
     """
     Pobiera oferty z lokalnych plików olx_page_*.html.
@@ -18,6 +23,14 @@ def fetch_offers(max_price=None):
     all_offers = []
 
     for file in sorted(glob.glob("files/olx_page_*.html")):
+        filename = os.path.basename(file)
+
+        m = TYPE_RE.search(filename)
+        if not m:
+            continue
+
+        offer_type = m.group(1)
+
         with open(file, "r", encoding="utf-8") as f:
             soup = BeautifulSoup(f, "html.parser")
 
@@ -46,7 +59,8 @@ def fetch_offers(max_price=None):
                 "id": olx_id,
                 "title": title_el.text.strip(),
                 "price": price,
-                "url": url
+                "url": url,
+                "type": offer_type
             })
 
     return all_offers
